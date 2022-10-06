@@ -1,24 +1,38 @@
-import {useState} from 'react'
+import React, {useState} from 'react'
 
 const App:React.FC = () => {
   interface SingleTodo {
-    id: number,
     name: string,
     done: boolean
   }
 
-  const [todos, setTodos] = useState<SingleTodo[]>([{id:1, name: 'Do Dishes', done: false}, {id: 2, name: 'Groceries', done: false}, {id: 3, name: 'Walk Dog', done: false}, {id:4, name: 'Garbage', done: false}])
+  const [todos, setTodos] = useState<SingleTodo[]>([{ name: 'Do Dishes', done: false}, { name: 'Groceries', done: false}, { name: 'Walk Dog', done: false}, { name: 'Garbage', done: false}])
+
+  const [newTodo, setNewTodo] = useState({ name: '', done: false})
 
   const changeTodo = (oneTodo:SingleTodo) => {
     oneTodo.done = !oneTodo.done
     setTodos(todos.map((todo) => {
-       return todo.id !== oneTodo.id ? todo : oneTodo
+       return todo.name !== oneTodo.name ? todo : oneTodo
     }))
+  }
+
+  const addTodo = (event:React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setTodos([...todos, newTodo])
+  }
+
+  const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
+    setNewTodo({...newTodo, [event.target.name]: event.target.value })
   }
   
    return (
     <>
       <h1>Todo List</h1>
+      <form onSubmit={addTodo}>
+        <input type="text" onChange={handleChange} name="name"/>
+        <input type="submit" />
+      </form>
       <div>
         <h2>TODO's</h2>
         {todos.map((todo) => {
