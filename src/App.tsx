@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {useState} from 'react'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App:React.FC = () => {
+  interface SingleTodo {
+    id: number,
+    name: string,
+    done: boolean
+  }
+
+  const [todos, setTodos] = useState<SingleTodo[]>([{id:1, name: 'Do Dishes', done: false}, {id: 2, name: 'Groceries', done: false}, {id: 3, name: 'Walk Dog', done: false}, {id:4, name: 'Garbage', done: false}])
+
+  const changeTodo = (oneTodo:SingleTodo) => {
+    oneTodo.done = !oneTodo.done
+    setTodos(todos.map((todo) => {
+       return todo.id !== oneTodo.id ? todo : oneTodo
+    }))
+  }
+  
+   return (
+    <>
+      <h1>Todo List</h1>
+      <div>
+        <h2>TODO's</h2>
+        {todos.map((todo) => {
+         return !todo.done ? <p onClick={()=>{changeTodo(todo)}}>{todo.name}</p> : ''
+      })}
+      </div>
+      <div>
+        <h2>DONE</h2>
+        {todos.map((todo) => {
+         return todo.done ? <p onClick={()=>{changeTodo(todo)}}>{todo.name}</p> : ''
+      })}
+      </div>
+    </>
+   )
 }
 
-export default App;
+export default App
